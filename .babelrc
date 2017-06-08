@@ -1,0 +1,22 @@
+{
+  "presets": [
+    ["es2015", { "modules": false }],
+    "stage-0",
+    "flow",
+    "react"
+  ],
+  "env": {
+    "development": {
+      "plugins": [
+        "flow-react-proptypes"
+      ]
+    },
+    "production": {
+      "plugins": [
+        ["lodash", { "id": [
+          "lodash"
+        ]}]
+      ]
+    }
+  }
+}
