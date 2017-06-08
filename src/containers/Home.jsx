@@ -22,19 +22,20 @@ class Home extends Component {
       setFlag: Function,
     },
     state: {
-      saved: any,
-      savedPending: Boolean,
-      authPending: Boolean,
-      signIn: Boolean,
+      saved: Array<Object>,
+      authPending: boolean,
+      signIn: boolean,
     },
   }
 
   componentDidMount() {
-    window.addEventListener('message', (ev) => {
+    window.addEventListener('message', ev => {
+      if (typeof ev.data !== 'string' || ! ev.data) return
       const data = ev.data // this is probably dumb
         .split('&')
         .map(e => e.split('=').map(p => decodeURIComponent(p)))
         .reduce((a, [k, v]) => ({ ...a, [k]: v }), {})
+      console.log(data)
       this.props.effects.setFlag('authPending', false)
       this.props.effects.setFlag('signIn', true)
       this.props.effects.getSaved(data.access_token)
@@ -43,7 +44,7 @@ class Home extends Component {
 
   render() {
     return (
-      this.props.state.saved
+      this.props.state.saved.length > 0
         ? <SavedList />
         : <div className={style.card} style={{ margin: '10px' }}>
           {this.props.state.signIn ||
@@ -51,8 +52,6 @@ class Home extends Component {
           <div>
             {this.props.state.authPending &&
               <div style={{ textAlign: 'center' }}>Waiting for response from reddit<Spinner /></div>}
-            {this.props.state.savedPending &&
-              <div style={{ textAlign: 'center' }}>Fetching saved content...<Spinner /></div>}
           </div>
         </div>
     )

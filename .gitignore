@@ -2,5 +2,3 @@ node_modules
 tags*
 public
 coverage
-secrets.js
-data.json

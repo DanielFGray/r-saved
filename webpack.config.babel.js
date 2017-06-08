@@ -75,7 +75,6 @@ if (process.env.NODE_ENV === 'production') {
     new UglifyJSPlugin({
       comments: false,
       warnings: false,
-      compress: {},
     }),
   )
 }

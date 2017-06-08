@@ -7,7 +7,7 @@
   "license": "GPL-3.0",
   "scripts": {
     "start": "nodemon -w webpack.config.babel.js -w .eslintrc.js -w .babelrc -x 'webpack-dev-server --progress'",
-    "build": "NODE_ENV=production webpack -p",
+    "build": "NODE_ENV=production webpack",
     "lint": "concurrently 'flow --quiet --color=always' 'eslint --ext=.js,.jsx src' 'stylelint src/**/*.{css,sss}' --prefix '{name}:' --names 'flow,eslint,stylelint' -c 'gray.reset' || true"
   },
   "dependencies": {
@@ -16,7 +16,7 @@
     "normalize.css": "^7.0.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "snoowrap": "^1.14.0",
+    "rxjs": "^5.4.0",
     "superagent": "^3.5.2"
   },
   "devDependencies": {
