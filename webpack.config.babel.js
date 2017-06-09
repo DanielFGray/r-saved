@@ -5,7 +5,6 @@ const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 const babelOpts = {
   test: /\.jsx?$/,
@@ -37,17 +36,6 @@ const cssOpts = [
   },
 ]
 
-const miscLoaders = [
-  {
-    test: /\.(jpe?g|png|gif|eot|woff2?|ttf|html)$/,
-    use: 'file-loader',
-  },
-  {
-    test: /\.svg$/,
-    use: 'svg-inline-loader',
-  },
-]
-
 const plugins = [
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
@@ -70,14 +58,17 @@ const plugins = [
   }]),
 ]
 
-if (process.env.NODE_ENV === 'production') {
-  plugins.push(
-    new UglifyJSPlugin({
-      comments: false,
-      warnings: false,
-    }),
-  )
-}
+const entry = ['./src/index']
+
+// if (process.env.NODE_ENV !== 'production') {
+//   entry.unshift(
+//     'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
+//     'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
+//   )
+//   plugins.push(
+//     new webpack.HotModuleReplacementPlugin(),
+//   )
+// }
 
 const stats = {
   chunks: false,
@@ -86,7 +77,7 @@ const stats = {
 }
 
 module.exports = {
-  entry: './src/index',
+  entry,
   resolve: {
     extensions: ['.js', '.jsx'],
   },
@@ -98,13 +89,13 @@ module.exports = {
     rules: [
       babelOpts,
       ...cssOpts,
-      ...miscLoaders,
     ],
   },
   plugins,
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/',
+    // hot: true,
     stats,
   },
   stats,

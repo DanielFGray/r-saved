@@ -15,21 +15,6 @@ import {
 } from 'lodash/fp'
 import config from '../secrets'
 
-const objectToString = (obj, join = '=&') =>
-  Object.entries(obj)
-    .map(p => p.map(e => encodeURIComponent(e)).join(join[0]))
-    .join(join[1])
-
-const apiOpts = {
-  userAgent: 'web:searchsavedredditcontent:0.0.1 (by /u/danielfgray)',
-  client_id: config.client_id || '',
-  response_type: 'token',
-  state: Date.now(),
-  duration: 'temporary',
-  redirect_uri: config.redirect_uri,
-  scope: 'identity history save vote',
-}
-
 const wrapWithPending = (pendingKey, cb) => (effects, ...a) =>
   effects.setFlag(pendingKey, true)
     .then(() => cb(effects, ...a))
@@ -64,18 +49,19 @@ const Provider = provideState({
     authPending: false,
     signIn: false,
     subFilter: '',
+    apiOpts: {
+      userAgent: 'web:searchsavedredditcontent:0.0.1 (by /u/danielfgray)',
+      client_id: config.client_id || '',
+      response_type: 'token',
+      state: Date.now(),
+      duration: 'temporary',
+      redirect_uri: config.redirect_uri,
+      scope: 'identity history save vote',
+    },
   }),
   effects: {
     setFlag: (effects, key, value) => state => ({ ...state, [key]: value }),
     addSaved: (effects, e) => state => ({ ...state, saved: state.saved.concat(e) }),
-    authorize: effects =>
-      effects.setFlag('authPending', true)
-        .then(window.open(`https://www.reddit.com/api/v1/authorize/?${objectToString(apiOpts)}`,
-          objectToString({
-            dialog: 1,
-            toolbar: 0,
-          }, '=,')))
-        .then(() => state => state),
     getSaved: wrapWithPending('savedPending', (effects, code) =>
       Reddit(code, 'api/v1/me')
         .flatMap(x => getAllSaved(code, x.name))
@@ -85,6 +71,15 @@ const Provider = provideState({
         .then(saved => state => ({ ...state, saved }))),
   },
   computed: {
+    domains: ({ saved }) =>
+      pipe(
+        pluck('subreddit'),
+        countBy(identity),
+        toPairs,
+        map(zipObj(['name', 'count'])),
+        sortBy('count'),
+        reverse,
+      )(saved),
     subreddits: ({ saved }) =>
       pipe(
         pluck('subreddit'),

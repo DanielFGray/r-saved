@@ -6,8 +6,6 @@ import './style.sss'
 import Provider from './actions'
 import Home from './containers/Home'
 
-const Init = Provider(() => (
-  <Home />
-))
+const Init = Provider(() => <Home />)
 
 render(<Init />, document.getElementById('main'))

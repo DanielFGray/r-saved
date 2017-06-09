@@ -1,3 +1,6 @@
+*
+  box-sizing: border-box
+
 body
   background: #ccc
   font-family: sans
@@ -13,5 +16,27 @@ body
 
 .listItem
   @inherit: .card
-  --speed: 0.1s
-  transition: height var(--speed), padding var(--speed), margin var(--speed)
+  max-height: 80%
+
+  .meta
+    font-size: smaller
+
+    > *
+      margin-right: 5px
+
+    .sub
+      float: right
+      margin-right: 0
+
+.headerControls
+  margin: 10px
+
+  button, input, select
+    height: 30px
+    margin-right: 5px
+
+  input
+    width: 40%
+
+  .buttons
+    float: right
