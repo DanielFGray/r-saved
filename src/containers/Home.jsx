@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react'
 import { injectState } from 'freactal'
-import Provider from '../actions'
 import Spinner from '../components/Spinner'
 import SavedList from '../components/SavedList'
 import style from '../style.sss'
@@ -58,4 +57,4 @@ class Home extends Component {
   }
 }
 
-export default Provider(injectState(Home))
+export default injectState(Home)

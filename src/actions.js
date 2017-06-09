@@ -40,8 +40,8 @@ const getAllSaved = (code, user, query) =>
       const items$ = Observable.of(x.data.children)
       const next$ =
         x.data.after !== null
-        ? getAllSaved(code, user, { after: x.data.after }) :
-        Observable.empty()
+        ? getAllSaved(code, user, { after: x.data.after })
+        : Observable.empty()
       return Observable.concat(items$, next$)
     }))
 
@@ -69,8 +69,7 @@ const Provider = provideState({
       Reddit(code, 'api/v1/me')
         .flatMap(x => getAllSaved(code, x.name))
         .flatMap(x => x)
-        .map(x => x.data)
-        .reduce((p, c) => p.concat(c), [])
+        .reduce((p, c) => p.concat(c.data), [])
         .toPromise()
         .then(saved => state => ({ ...state, saved }))),
   },
