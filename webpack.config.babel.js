@@ -61,7 +61,7 @@ const plugins = [
   new HtmlWebpackPlugin({
     template: 'src/index.ejs',
     inject: false,
-    title: 'title',
+    title: 'r-saved: search your saved Reddit content',
     appMountId: 'main',
     devServer: '',
   }),

@@ -45,7 +45,7 @@ class SavedList extends Component {
   }
 
   state = {
-    filteredSub: 'none',
+    filteredSub: 'all',
     filterText: '',
   }
 
@@ -58,7 +58,7 @@ class SavedList extends Component {
   render() {
     let list = this.props.state.saved
 
-    if (this.state.filteredSub !== 'none') {
+    if (this.state.filteredSub !== 'all') {
       list = list.map(e => ({ ...e, filtered: ! e.subreddit === this.state.filteredSub }))
     }
 
@@ -81,7 +81,7 @@ class SavedList extends Component {
           />
           <select onChange={this.changeSub}>
             <optgroup label="filter by subreddit">
-              <option value="none">-none-</option>
+              <option value="all">all - {list.length}</option>
               {this.props.state.subreddits.map(e =>
                 <option key={e.name} value={e.name}>{e.name} - {e.count}</option>)}
             </optgroup>

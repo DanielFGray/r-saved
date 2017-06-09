@@ -7,6 +7,9 @@ import style from '../style.sss'
 
 const SignIn = (props: { authorize: Function }) => (
   <div style={{ textAlign: 'center' }}>
+    <div>
+      Sign in to Reddit to see your saved content with real-time search and filtering
+    </div>
     <button onClick={props.authorize}>
       Sign In
     </button>
