@@ -73,14 +73,14 @@ class SavedList extends Component {
   render() {
     let list = this.props.state.saved
 
-    if (this.state.filteredSub !== 'all') {
-      list = list.map(e => ({ ...e, filtered: ! e.subreddit === this.state.filteredSub }))
-    }
-
-    if (this.state.filterText !== '') {
+    if (this.state.filterText !== '' || this.state.filteredSub !== 'all') {
       list = list.map(e => {
-        const s = e.selftext || e.body || e.title
-        const filtered = ! includes(this.state.filterText.toLowerCase(), s.toLowerCase())
+        const s = e.selftext || e.body || e.link_title || e.title
+        if (! e.subreddit) console.log(e)
+        const filtered = ! (
+          e.subreddit === this.state.filteredSub &&
+          includes(this.state.filterText.toLowerCase(), s.toLowerCase())
+        )
         return { ...e, filtered }
       })
     }
