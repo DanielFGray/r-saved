@@ -10,3 +10,8 @@ body
   padding: 10px
   margin: 10px
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)
+
+.listItem
+  @inherit: .card
+  --speed: 0.1s
+  transition: height var(--speed), padding var(--speed), margin var(--speed)

@@ -9,17 +9,28 @@ const Item = (props: {
   id: string,
   url: string,
   body_html: string,
-  subreddit_name_prefixed: string,
+  selftext_html: string,
+  subreddit: string,
   link_permalink: string,
   permalink: string,
   num_comments: number,
+  filtered: boolean,
 }) => (
-  <li className={style.card} key={props.id}>
-    {props.title
-      ? <div><a href={props.url}>{props.title}</a></div>
-      : <div dangerouslySetInnerHTML={{ __html: props.body_html }} />}
+  <li
+    className={style.listItem}
+    key={props.id}
+    style={{
+      height: props.filtered && 0,
+      margin: props.filtered && 0,
+      padding: props.filtered && 0,
+      overflow: props.filtered && 'hidden',
+    }}
+  >
+    {props.title && <div><a href={props.url}>{props.title}</a></div>}
+    {props.body_html && <div style={{ overflow: 'auto' }} dangerouslySetInnerHTML={{ __html: props.body_html }} />}
+    {props.selftext_html && <div style={{ overflow: 'auto' }} dangerouslySetInnerHTML={{ __html: props.selftext_html }} />}
     <div>
-      <a href={`https://reddit.com/${props.subreddit_name_prefixed}`}>/{props.subreddit_name_prefixed}</a>
+      <a href={`https://reddit.com/r/${props.subreddit}`}>/r/{props.subreddit}</a>
       <a href={props.link_permalink || `https://reddit.com${props.permalink}`}>{props.num_comments} comments</a>
     </div>
   </li>
@@ -29,6 +40,7 @@ class SavedList extends Component {
   props: {
     state: {
       saved: Array<Object>,
+      subreddits: Array<Object>,
     },
   }
 
@@ -47,13 +59,14 @@ class SavedList extends Component {
     let list = this.props.state.saved
 
     if (this.state.filteredSub !== 'none') {
-      list = list.filter(e => e.subreddit === this.state.filteredSub)
+      list = list.map(e => ({ ...e, filtered: ! e.subreddit === this.state.filteredSub }))
     }
 
     if (this.state.filterText !== '') {
-      list = list.filter(e => {
+      list = list.map(e => {
         const s = e.title || e.body
-        return includes(this.state.filterText, s.toLowerCase())
+        const filtered = ! includes(this.state.filterText.toLowerCase(), s.toLowerCase())
+        return { ...e, filtered }
       })
     }
 

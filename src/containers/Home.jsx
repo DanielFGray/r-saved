@@ -23,6 +23,7 @@ class Home extends Component {
     state: {
       saved: Array<Object>,
       authPending: boolean,
+      savedPending: boolean,
       signIn: boolean,
     },
   }
@@ -48,6 +49,10 @@ class Home extends Component {
         : <div className={style.card} style={{ margin: '10px' }}>
           {this.props.state.signIn ||
             <SignIn authorize={this.props.effects.authorize} />}
+          <div>
+            {this.props.state.savedPending &&
+              <div style={{ textAlign: 'center' }}>Fetching content...<Spinner /></div>}
+          </div>
           <div>
             {this.props.state.authPending &&
               <div style={{ textAlign: 'center' }}>Waiting for response from reddit<Spinner /></div>}
