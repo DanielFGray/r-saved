@@ -70,9 +70,9 @@ const Provider = provideState({
         .flatMap(x => getAllSaved(code, x.name))
         .flatMap(x => x)
         .map(x => x.data)
-        .do(effects.addSaved)
+        .reduce((p, c) => p.concat(c), [])
         .toPromise()
-        .then(() => state => state)),
+        .then(saved => state => ({ ...state, saved }))),
   },
 })
 
