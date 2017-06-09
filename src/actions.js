@@ -56,7 +56,7 @@ const Provider = provideState({
       state: Date.now(),
       duration: 'temporary',
       redirect_uri: config.redirect_uri,
-      scope: 'identity history save vote',
+      scope: 'identity history',
     },
   }),
   effects: {
