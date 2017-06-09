@@ -1,18 +1,7 @@
 // @flow
 import React, { Component } from 'react'
-import {
-  countBy,
-  identity,
-  includes,
-  map,
-  pipe,
-  pluck,
-  reverse,
-  sortBy,
-  toPairs,
-  zipObj,
-} from 'lodash/fp'
 import { injectState } from 'freactal'
+import { includes } from 'lodash/fp'
 import style from '../style.sss'
 
 const Item = (props: {
@@ -55,15 +44,6 @@ class SavedList extends Component {
     this.setState({ filterText: e.target.value })
 
   render() {
-    const subreddits = pipe(
-      pluck('subreddit'),
-      countBy(identity),
-      toPairs,
-      map(zipObj(['name', 'count'])),
-      sortBy('count'),
-      reverse,
-    )
-
     let list = this.props.state.saved
 
     if (this.state.filteredSub !== 'none') {
@@ -89,7 +69,7 @@ class SavedList extends Component {
           <select onChange={this.changeSub}>
             <optgroup label="filter by subreddit">
               <option value="none">-none-</option>
-              {subreddits(this.props.state.saved).map(e =>
+              {this.props.state.subreddits.map(e =>
                 <option key={e.name} value={e.name}>{e.name} - {e.count}</option>)}
             </optgroup>
           </select>

@@ -2,6 +2,17 @@
 import { provideState } from 'freactal'
 import { Observable } from 'rxjs'
 import request from 'superagent'
+import {
+  countBy,
+  identity,
+  map,
+  pipe,
+  pluck,
+  reverse,
+  sortBy,
+  toPairs,
+  zipObj,
+} from 'lodash/fp'
 import config from '../secrets'
 
 const objectToString = (obj, join = '=&') =>
@@ -72,6 +83,17 @@ const Provider = provideState({
         .reduce((p, c) => p.concat(c.data), [])
         .toPromise()
         .then(saved => state => ({ ...state, saved }))),
+  },
+  computed: {
+    subreddits: ({ saved }) =>
+      pipe(
+        pluck('subreddit'),
+        countBy(identity),
+        toPairs,
+        map(zipObj(['name', 'count'])),
+        sortBy('count'),
+        reverse,
+      )(saved),
   },
 })
 
