@@ -38,7 +38,6 @@ const Item = (props: {
 
 class SavedList extends Component {
   props: {
-    // list: Array<any>,
     state: {
       saved: Array<Object>,
     },
@@ -74,7 +73,7 @@ class SavedList extends Component {
     if (this.state.filterText !== '') {
       list = list.filter(e => {
         const s = e.title || e.body
-        return includes(this.state.filterText, s.toLowerCase)
+        return includes(this.state.filterText, s.toLowerCase())
       })
     }
 
