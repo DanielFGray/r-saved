@@ -8,7 +8,7 @@ import style from '../style.sss'
 const Item = (props: {
   author: string,
   body_html: string,
-  filtered: boolean,
+  matches: boolean,
   id: string,
   link_permalink: string,
   link_title: string,
@@ -24,10 +24,11 @@ const Item = (props: {
     className={style.listItem}
     key={props.id}
     style={{
-      height: props.filtered && 0,
-      margin: props.filtered && 0,
-      padding: props.filtered && 0,
-      overflow: props.filtered && 'hidden',
+      height: props.matches || 0,
+      margin: props.matches || 0,
+      padding: props.matches || 0,
+      border: props.matches || 0,
+      overflow: props.matches || 'hidden',
     }}
   >
     {props.link_title && <div><a href={props.link_url}>{props.link_title}</a></div>}
@@ -71,17 +72,21 @@ class SavedList extends Component {
     download(JSON.stringify(this.props.state.saved), 'reddit-saved-data.json', 'text/plain')
 
   render() {
-    let list = this.props.state.saved
+    let list = this.props.state.saved.map(e => ({ ...e, matches: true }))
 
-    if (this.state.filterText !== '' || this.state.filteredSub !== 'all') {
+    if (this.state.filteredSub !== 'all') {
       list = list.map(e => {
-        const s = e.selftext || e.body || e.link_title || e.title
-        if (! e.subreddit) console.log(e)
-        const filtered = ! (
-          e.subreddit === this.state.filteredSub &&
-          includes(this.state.filterText.toLowerCase(), s.toLowerCase())
-        )
-        return { ...e, filtered }
+        const matches = e.subreddit === this.state.filteredSub
+        return { ...e, matches }
+      })
+    }
+
+    if (this.state.filterText !== '') {
+      list = list.map(e => {
+        const s = e.selftext || e.body || e.title
+        const matches = (e.matches &&
+          includes(this.state.filterText.toLowerCase(), s.toLowerCase()))
+        return { ...e, matches }
       })
     }
 
