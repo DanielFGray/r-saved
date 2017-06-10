@@ -23,7 +23,10 @@ const wrapWithPending = (pendingKey, cb) => (effects, ...a) =>
 const Reddit = (code, url, query = {}) =>
   Observable.from(
     request.get(`https://oauth.reddit.com/${url}`)
-      .set({ Authorization: `bearer ${code}` })
+    .set({
+      Authorization: `bearer ${code}`,
+      'User-Agent': 'web:r-saved:0.0.1 (by /u/danielfgray)',
+    })
       .query({ ...query, raw_json: 1 }))
     .map(x => x.body)
 
@@ -50,7 +53,6 @@ const Provider = provideState({
     signIn: false,
     subFilter: '',
     apiOpts: {
-      userAgent: 'web:searchsavedredditcontent:0.0.1 (by /u/danielfgray)',
       client_id: config.client_id || '',
       response_type: 'token',
       state: Date.now(),
