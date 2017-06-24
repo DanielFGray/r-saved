@@ -51,6 +51,7 @@ const plugins = [
     inject: false,
     title: 'r-saved: search your saved Reddit content',
     appMountId: 'main',
+    mobile: true,
     devServer: '',
   }),
   new CopyWebpackPlugin([{
