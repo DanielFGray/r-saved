@@ -4,6 +4,7 @@ import { Observable } from 'rxjs'
 import request from 'superagent'
 import {
   countBy,
+  get,
   identity,
   map,
   pipe,
@@ -73,24 +74,26 @@ const Provider = provideState({
         .then(saved => state => ({ ...state, saved }))),
   },
   computed: {
-    domains: ({ saved }) =>
+    domains:
       pipe(
+        get('saved'),
         pluck('subreddit'),
         countBy(identity),
         toPairs,
         map(zipObj(['name', 'count'])),
         sortBy('count'),
         reverse,
-      )(saved),
-    subreddits: ({ saved }) =>
+      ),
+    subreddits:
       pipe(
+        get('saved'),
         pluck('subreddit'),
         countBy(identity),
         toPairs,
         map(zipObj(['name', 'count'])),
         sortBy('count'),
         reverse,
-      )(saved),
+      ),
   },
 })
 
