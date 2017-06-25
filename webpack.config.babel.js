@@ -4,7 +4,7 @@ const path = require('path')
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
+const { redirect_uri } = require('./secrets')
 
 const babelOpts = {
   test: /\.jsx?$/,
@@ -54,9 +54,12 @@ const plugins = [
     mobile: true,
     devServer: '',
   }),
-  new CopyWebpackPlugin([{
-    from: 'src/static',
-  }]),
+  new HtmlWebpackPlugin({
+    filename: 'callback.html',
+    template: 'src/static/callback.ejs',
+    redirect_uri: redirect_uri.slice(0, redirect_uri.lastIndexOf('/') + 1),
+    inject: false,
+  }),
 ]
 
 const entry = ['./src/index']
