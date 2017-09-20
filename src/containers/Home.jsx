@@ -1,41 +1,32 @@
 // @flow
-import React, { Component } from 'react'
+import * as React from 'react'
 import { injectState } from 'freactal'
-import Spinner from '../components/Spinner'
-import SavedList from '../components/SavedList'
-import style from '../style.sss'
 
-const SignIn = (props: { authorize: Function }) => (
-  <div style={{ textAlign: 'center' }}>
-    <div>
-      Sign in to Reddit to see your saved content with real-time search and filtering
-    </div>
-    <button onClick={props.authorize}>
-      Sign In
-    </button>
-  </div>
-)
+import SavedList from '../components/SavedList'
+import Splash from '../components/Splash'
+
+import type { Saved } from '../types'
 
 const objectToString = (obj, join = '=&') =>
   Object.entries(obj)
     .map(p => p.map(e => encodeURIComponent(e)).join(join[0]))
     .join(join[1])
 
-class Home extends Component {
-  props: {
-    effects: {
-      getSaved: Function,
-      setFlag: Function,
-    },
-    state: {
-      saved: Array<Object>,
-      authPending: boolean,
-      savedPending: boolean,
-      signIn: boolean,
-      apiOpts: Object,
-    },
-  }
+type P = {
+  effects: {
+    getSaved: Function,
+    setFlag: Function,
+  },
+  state: {
+    saved: Saved[],
+    authPending: boolean,
+    savedPending: boolean,
+    signIn: boolean,
+    apiOpts: Object,
+  },
+}
 
+class Home extends React.Component<P, {}> {
   componentDidMount() {
     window.addEventListener('message', ev => {
       if (typeof ev.data !== 'string' || ! ev.data) return
@@ -51,30 +42,29 @@ class Home extends Component {
   }
 
   authorize = () => {
-    window.open(`https://www.reddit.com/api/v1/authorize/?${objectToString(this.props.state.apiOpts)}`,
-      objectToString({
-        dialog: 1,
-        toolbar: 0,
-      }, '=,'))
+    window.open(
+      `https://www.reddit.com/api/v1/authorize/?${objectToString(this.props.state.apiOpts)}`,
+      objectToString(
+        {
+          dialog: 1,
+          toolbar: 0,
+        },
+        '=,',
+      ),
+    )
     this.props.effects.setFlag('authPending', true)
   }
 
   render() {
-    return (
-      this.props.state.saved.length > 0
-        ? <SavedList />
-        : <div className={style.card} style={{ margin: '10px' }}>
-          {this.props.state.signIn ||
-            <SignIn authorize={this.authorize} />}
-          <div>
-            {this.props.state.savedPending &&
-              <div style={{ textAlign: 'center' }}>Fetching content...<Spinner /></div>}
-          </div>
-          <div>
-            {this.props.state.authPending &&
-              <div style={{ textAlign: 'center' }}>Waiting for response from reddit<Spinner /></div>}
-          </div>
-        </div>
+    return this.props.state.saved.length > 0 ? (
+      <SavedList />
+    ) : (
+      <Splash
+        authorize={this.authorize}
+        signIn={this.props.state.signIn}
+        savedPending={this.props.state.savedPending}
+        authPending={this.props.state.authPending}
+      />
     )
   }
 }

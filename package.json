@@ -8,13 +8,14 @@
   "scripts": {
     "start": "nodemon -w webpack.config.babel.js -w .eslintrc.js -w .babelrc -x 'webpack-dev-server --progress'",
     "build": "NODE_ENV=production webpack -p",
-    "lint": "concurrently 'flow --quiet --color=always' 'eslint --ext=.js,.jsx src' 'stylelint src/**/*.{css,sss}' --prefix '{name}:' --names 'flow,eslint,stylelint' -c 'gray.reset' || true"
+    "lint": "concurrently 'flow --quiet --color=always' 'eslint --ext=.js,.jsx src' 'stylelint src/**/*.{css,sss}' --prefix '{name}:' --names 'flow,eslint,stylelint' -c 'gray.reset' || true",
+    "format": "prettier-eslint --list-different --write 'src/**/*.js{,x}'"
   },
   "dependencies": {
     "downloadjs": "^1.4.7",
     "freactal": "^1.1.0",
-    "lodash": "^4.17.4",
     "normalize.css": "^7.0.0",
+    "ramda": "^0.24.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "rxjs": "^5.4.1",
@@ -36,7 +37,7 @@
     "css-loader": "^0.28.4",
     "cssnano": "^3.10.0",
     "empty": "^0.10.1",
-    "eslint": "^3.19.0",
+    "eslint": "^4.7.1",
     "eslint-config-airbnb": "^15.0.1",
     "eslint-loader": "^1.8.0",
     "eslint-plugin-flowtype": "^2.34.0",
@@ -55,6 +56,8 @@
     "postcss-inherit": "^4.0.3",
     "postcss-loader": "^2.0.6",
     "postcss-nested": "^2.0.2",
+    "prettier": "^1.7.0",
+    "prettier-eslint-cli": "^4.3.2",
     "prop-types": "^15.5.10",
     "stylelint": "^7.11.1",
     "stylelint-config-standard": "^16.0.0",

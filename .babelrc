@@ -1,22 +1,24 @@
 {
-  "presets": [
-    ["es2015", { "modules": false }],
-    "stage-0",
-    "flow",
-    "react"
+  presets: [
+    ['es2015', { modules: false }],
+    'stage-0',
+    'flow',
+    'react'
   ],
-  "env": {
-    "development": {
-      "plugins": [
-        "flow-react-proptypes"
+  env: {
+    development: {
+      plugins: [
+        'flow-react-proptypes'
       ]
     },
-    "production": {
-      "plugins": [
-        ["lodash", { "id": [
-          "lodash"
-        ]}]
-      ]
-    }
-  }
+    production: {
+      plugins: [
+        ['lodash', { id: [
+          'ramda',
+        ]}],
+      ],
+    },
+  },
 }
+
+// vim: ft=javascript

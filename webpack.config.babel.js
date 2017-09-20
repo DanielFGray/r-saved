@@ -39,7 +39,7 @@ const plugins = [
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     minChunks: module =>
-    module.context && module.context.indexOf('node_modules') !== -1,
+      module.context && module.context.indexOf('node_modules') !== -1,
   }),
   new ExtractTextPlugin({
     filename: '[name].bundle.css',
@@ -63,16 +63,6 @@ const plugins = [
 
 const entry = ['./src/index']
 
-// if (process.env.NODE_ENV !== 'production') {
-//   entry.unshift(
-//     'webpack-dev-server/client?http://0.0.0.0:8080', // WebpackDevServer host and port
-//     'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
-//   )
-//   plugins.push(
-//     new webpack.HotModuleReplacementPlugin(),
-//   )
-// }
-
 const stats = {
   chunks: false,
   modules: false,
@@ -95,7 +85,6 @@ module.exports = {
   devServer: {
     contentBase: path.resolve(__dirname, 'public'),
     publicPath: '/',
-    // hot: true,
     stats,
   },
   stats,
