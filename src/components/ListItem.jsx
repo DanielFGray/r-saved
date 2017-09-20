@@ -28,10 +28,7 @@ const Item = (props: Saved) => (
       </div>
     )}
     {props.body_html && (
-      <div
-        style={{ overflow: 'auto' }}
-        dangerouslySetInnerHTML={{ __html: props.body_html }}
-      />
+      <div style={{ overflow: 'auto' }} dangerouslySetInnerHTML={{ __html: props.body_html }} />
     )}
     {props.selftext_html && (
       <div style={{ overflow: 'auto' }} dangerouslySetInnerHTML={{ __html: props.selftext_html }} />

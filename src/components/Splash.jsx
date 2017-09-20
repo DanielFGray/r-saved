@@ -22,16 +22,8 @@ const SignIn = (props: { authorize: Function }) => (
 const Splash = (props: P) => (
   <div className={style.card} style={{ margin: '10px' }}>
     {props.signIn || <SignIn authorize={props.authorize} />}
-    <div>
-      {props.savedPending && (
-        <Spinner label="Fetching content..." />
-      )}
-    </div>
-    <div>
-      {props.authPending && (
-        <Spinner label="Waiting for response from reddit" />
-      )}
-    </div>
+    <div>{props.savedPending && <Spinner label="Fetching content..." />}</div>
+    <div>{props.authPending && <Spinner label="Waiting for response from reddit" />}</div>
   </div>
 )
 
