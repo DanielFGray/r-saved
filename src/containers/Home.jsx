@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { injectState } from 'freactal'
 
-import SavedList from '../components/SavedList'
+import SavedList from '../containers/SavedList'
 import Splash from '../components/Splash'
 
 import type { Saved } from '../types'
@@ -12,21 +12,21 @@ const objectToString = (obj, join = '=&') =>
     .map(p => p.map(e => encodeURIComponent(e)).join(join[0]))
     .join(join[1])
 
-type P = {
-  effects: {
-    getSaved: Function,
-    setFlag: Function,
-  },
-  state: {
-    saved: Saved[],
-    authPending: boolean,
-    savedPending: boolean,
-    signIn: boolean,
-    apiOpts: Object,
-  },
-}
+class Home extends React.Component {
+  props: {
+    effects: {
+      getSaved: Function,
+      setFlag: Function,
+    },
+    state: {
+      saved: Saved[],
+      authPending: boolean,
+      savedPending: boolean,
+      signIn: boolean,
+      apiOpts: Object,
+    },
+  }
 
-class Home extends React.Component<P, {}> {
   componentDidMount() {
     window.addEventListener('message', ev => {
       if (typeof ev.data !== 'string' || ! ev.data) return

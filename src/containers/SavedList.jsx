@@ -3,63 +3,24 @@ import * as React from 'react'
 import { injectState } from 'freactal'
 import download from 'downloadjs'
 
+import Controls from '../components/Controls'
 import ListItem from '../components/ListItem'
-
-import style from '../style.sss'
 
 import type { Subreddit, Saved } from '../types'
 
-type ListProps = {
+class SavedList extends React.Component {
+  props: {
+    state: {
+      saved: Saved[],
+      subreddits: Subreddit[],
+    },
+  }
+
   state: {
-    saved: Saved[],
-    subreddits: Subreddit[],
-  },
-}
+    filteredSub: string,
+    filteredText: string,
+  }
 
-type ListState = {
-  filteredSub: string,
-  filteredText: string,
-}
-
-type ControlProps = {
-  changeSub: Function,
-  listLength: Number,
-  subreddits: Subreddit[],
-  filterText: string,
-  changeText: Function,
-  download: Function,
-}
-
-const Controls = (props: ControlProps) => (
-  <div className={style.headerControls}>
-    <span className={style.subFilter}>
-      <select onChange={props.changeSub}>
-        <optgroup label="filter by subreddit">
-          {[{ name: 'all', count: props.listLength }]
-            .concat(props.subreddits)
-            .map(e => (
-              <option key={e.name} value={e.name}>
-                {e.name} - {e.count}
-              </option>
-            ))}
-        </optgroup>
-      </select>
-    </span>
-    <span className={style.filterText}>
-      <input
-        type="text"
-        placeholder="search titles"
-        value={props.filterText}
-        onChange={props.changeText}
-      />
-    </span>
-    <span className={style.buttons}>
-      <button onClick={props.download}>Download JSON</button>
-    </span>
-  </div>
-)
-
-class SavedList extends React.Component<ListProps, ListState> {
   state = {
     filteredSub: 'all',
     filterText: '',
@@ -98,10 +59,10 @@ class SavedList extends React.Component<ListProps, ListState> {
     return (
       <div>
         <Controls
-          changeSub={this.thangeSub}
+          changeSub={this.changeSub}
           listLength={list.length}
-          subreddits={this.state.subreddits}
-          filterText={this.filterText}
+          subreddits={this.props.state.subreddits}
+          filterText={this.state.filterText}
           changeText={this.changeText}
           download={this.download}
         />
