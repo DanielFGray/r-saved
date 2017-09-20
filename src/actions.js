@@ -91,7 +91,7 @@ const Provider = provideState({
       countBy(id),
       toPairs,
       map(zipObj(['name', 'count'])),
-      sortBy('count'),
+      sortBy(prop('count')),
       reverse,
     ),
     subreddits: pipe(
@@ -100,7 +100,7 @@ const Provider = provideState({
       countBy(id),
       toPairs,
       map(zipObj(['name', 'count'])),
-      sortBy('count'),
+      sortBy(prop('count')),
       reverse,
     ),
   },
