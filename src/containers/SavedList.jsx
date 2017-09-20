@@ -1,12 +1,60 @@
 // @flow
+/* eslint 'no-unused-vars': 'warn' */
 import * as React from 'react'
 import { injectState } from 'freactal'
 import download from 'downloadjs'
+import {
+  curry,
+  equals as eq,
+  identity as id,
+  ifElse,
+  map,
+  path,
+  pipe as $,
+  prop,
+  propOr,
+  reverse,
+  sortBy,
+} from 'ramda'
 
 import Controls from '../components/Controls'
 import ListItem from '../components/ListItem'
 
 import type { Subreddit, Saved } from '../types'
+
+const tap = curry((f, o) => {
+  // eslint-disable-line no-extend-native
+  f(o)
+  return o
+})
+
+const filterSortList = (state, l) =>
+  $(
+    map(e => {
+      let matches = true
+      if (state.filteredSub !== 'all') {
+        matches = e.subreddit === state.filteredSub
+      }
+      if (state.filterText !== '') {
+        matches =
+          matches &&
+          propOr('', 'title', e)
+            .toLowerCase()
+            .includes(state.filterText.toLowerCase())
+      }
+      return { ...e, matches }
+    }),
+    tap(console.log),
+    ifElse(
+      () => eq('date', state.sortBy),
+      id,
+      propOr(id, state.sortBy.toLowerCase(), {
+        upvotes: $(sortBy(prop('ups')), reverse),
+        score: $(sortBy(prop('score')), reverse),
+        comments: $(sortBy(prop('num_comments')), reverse),
+      }),
+    ),
+  )(l)
 
 class SavedList extends React.Component {
   props: {
@@ -19,19 +67,25 @@ class SavedList extends React.Component {
   state: {
     filteredSub: string,
     filteredText: string,
+    sortBy: string,
   }
 
   state = {
     filteredSub: 'all',
     filterText: '',
+    sortBy: 'date',
   }
 
   changeSub = (e: SyntheticInputEvent) => {
-    this.setState({ filteredSub: e.target.value })
+    this.setState({ filteredSub: e.currentTarget.value })
   }
 
   changeText = (e: SyntheticInputEvent) => {
-    this.setState({ filterText: e.target.value })
+    this.setState({ filterText: e.currentTarget.value })
+  }
+
+  changeSort = (e: SyntheticInputEvent) => {
+    this.setState({ sortBy: e.currentTarget.value })
   }
 
   download = () => {
@@ -39,32 +93,17 @@ class SavedList extends React.Component {
   }
 
   render() {
-    let list = this.props.state.saved.map(e => ({ ...e, matches: true }))
-
-    if (this.state.filteredSub !== 'all') {
-      list = list.map(e => {
-        const matches = e.subreddit === this.state.filteredSub
-        return { ...e, matches }
-      })
-    }
-
-    if (this.state.filterText !== '') {
-      list = list.map(e => {
-        const s = e.selftext || e.body || e.title
-        const matches = e.matches && s.toLowerCase().includes(this.state.filterText.toLowerCase())
-        return { ...e, matches }
-      })
-    }
-
+    const list = filterSortList(this.state, this.props.state.saved)
     return (
       <div>
         <Controls
           changeSub={this.changeSub}
+          changeText={this.changeText}
+          changeSort={this.changeSort}
+          download={this.download}
+          filterText={this.state.filterText}
           listLength={list.length}
           subreddits={this.props.state.subreddits}
-          filterText={this.state.filterText}
-          changeText={this.changeText}
-          download={this.download}
         />
         <ol>{list.map(ListItem)}</ol>
       </div>
