@@ -1,12 +1,12 @@
 // @flow
 import React from 'react'
 
-import style from './Spinner.sss'
+import styles from './Spinner.sss'
 
-const Spinner = (props: { label: string }) => (
-  <div>
-    {props.label && <div style={{ textAlign: 'center' }}>{props.label}</div>}
-    <div className={style.spinner}>
+const Spinner = ({ style = {}, label }: { label: string, style: Object }) => (
+  <div style={style}>
+    {label && <div style={{ textAlign: 'center' }}>{label}</div>}
+    <div className={styles.spinner}>
       <div />
     </div>
   </div>
